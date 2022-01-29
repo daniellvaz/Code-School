@@ -1,23 +1,15 @@
-import React, { ReactElement, ReactNode } from 'react';
-import { IconType } from 'react-icons';
-import { Image, Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
-import { styles } from './styles';
+import React, { ReactNode } from 'react';
+import { Text, TouchableOpacity, TouchableOpacityProps } from 'react-native';
+
 
 type Props = TouchableOpacityProps & {
-  children: ReactNode;
-  left?: string;
-  rigth?: string;
+  children: ReactNode
 }
 
-const Button = ({children, left, rigth, ...rest}: Props) => {
+const Button = ({children,...rest}: Props) => {
   return (
-    <TouchableOpacity
-      style={styles.container}
-      {...rest}
-    >
-      <Text style={styles.content}>
-        {children}
-      </Text>
+    <TouchableOpacity {...rest}>
+      {children}
     </TouchableOpacity>
   );
 }

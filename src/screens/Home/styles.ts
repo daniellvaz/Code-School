@@ -16,4 +16,17 @@ export const styles = StyleSheet.create({
     width: "100%",
     marginTop: 64,
   },
+  button: {
+    width: 64,
+    height: 64,
+    padding: 16,
+    position: "absolute",
+    top: "90%",
+    left: "85%",
+    borderRadius: 8,
+    backgroundColor: theme.colors.primary,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });

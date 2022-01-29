@@ -1,4 +1,5 @@
 import React from 'react';
+import { AntDesign } from "@expo/vector-icons"
 
 import { Image, Text, View } from 'react-native';
 
@@ -21,9 +22,13 @@ const Home: React.FC = () => {
         source={Ilustration}
         style={styles.image}
       />
-      <Button>
+      <Button style={styles.button}>
         <Link to="/SignIn">
-          <Image source={Arrow}/>
+          <AntDesign 
+            name="arrowright" 
+            size={32} 
+            color="#e2e2e2" 
+          />
         </Link> 
       </Button>
     </View> 
