@@ -1,18 +1,18 @@
 import React from "react";
-import { useAuthContext } from "../context/AuthContext";
+import { NavigationContainer } from '@react-navigation/native';
+
+
 import Authenticated from "./authenticated.routes";
 import Unauthenticated from "./unauthenticated.routes";
+import { useAuthContext } from "../context/AuthContext";
+
 
 export default function Routes() {
   const { isAuthenticated } = useAuthContext()
 
-  if(isAuthenticated) {
-    return (
-      <Authenticated />
-    )
-  }
-
   return (
-    <Unauthenticated />
+    <NavigationContainer>
+      { isAuthenticated ? <Authenticated/> : <Unauthenticated /> }
+    </NavigationContainer>
   )
 }

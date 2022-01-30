@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   title: {
-    marginTop: 32,
+    marginTop: 64,
     fontSize: 48,
     fontWeight: "bold",
     color: theme.colors.text,

@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   title: {
-    marginTop: 64,
+    marginTop: 32,
     color: theme.colors.text,
     fontWeight: "bold",
     fontSize: 32,
@@ -21,7 +21,6 @@ export const styles = StyleSheet.create({
     left: "50%",
   },
   form: {
-    height: 360,
     justifyContent: "space-between",
   },
   input: {
@@ -43,7 +42,7 @@ export const styles = StyleSheet.create({
     color: theme.colors.primary,
   },
   button: {
-    marginTop: 16,
+    marginTop: 8,
     padding: 16,
     borderRadius: 8,
     alignItems: "center",

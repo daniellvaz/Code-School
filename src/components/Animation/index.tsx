@@ -8,7 +8,7 @@ const Animation = () => {
   return (
     <View style={styles.container}>
       <Lottie 
-        source={require("../../../assets/rocket.json")}
+        source={require("../../../assets/loading.json")}
         autoPlay
         loop
       />

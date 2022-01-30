@@ -20,7 +20,7 @@ export default function Unauthenticated() {
       screenOptions={{
         headerShown: false,
         cardStyle: {
-          backgroundColor: '#2f2f2f'
+          backgroundColor: 'transparent'
         }
       }}
     >
