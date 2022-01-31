@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="200" src="assets/logo.png">
+  <img width="200" src="packages/mobile/assets/logo.png">
 </div>
 <br>
 <div  align="center">
@@ -15,7 +15,7 @@
   Hope you like it! 😀
 </p>
 
-<img width="100%" src="assets/image.png">
+<img width="100%" src="packages/mobile/assets/image.png">
 
 <br>
 
