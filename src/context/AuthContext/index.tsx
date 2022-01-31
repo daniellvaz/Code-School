@@ -1,4 +1,6 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { Users } from '../../../@types/users';
+import { users } from '../../data/users';
 import api from '../../service/api';
 
 interface ISignIn {
@@ -23,13 +25,13 @@ export const AuthProvider = ({ children }: IAuthContext) => {
 
   const handleSignIn = async (data: ISignIn) => {
     try {
-      const response = await api.get('/users');
+      const response = await api.get<Users[]>('/users', users);
 
       if(!response) {
         return;
       }
       
-      const user = response.find(user => data.email === user.email && data.password === user.password);
+      const user = response.data.find(user => data.email === user.email && data.password === user.password);
 
       if(!user) {
         return;

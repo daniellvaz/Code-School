@@ -12,6 +12,7 @@ import Card from "../../components/Card";
 import Preview from "../../components/Preview";
 
 import { styles } from "./styles";
+import Header from "../../components/Header";
      
 export default function Dashboard() {   
   const { isAuthenticated } = useAuthContext();
@@ -24,10 +25,7 @@ export default function Dashboard() {
   return (
     <LinearGradient>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Olá, Daniel 👋</Text>
-          <Image style={styles.avatar} source={{uri: "https://github.com/daniellvaz.png"}}/>
-        </View>
+        <Header />
         <View>
           <View style={styles.preview}>
             <Preview />
