@@ -83,7 +83,7 @@ yarn run android
 or
 
 ```
-yarn run ios
+npm run ios
 ```
 
 <hr>
