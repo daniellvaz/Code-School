@@ -1,7 +1,8 @@
-import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { Users } from '../../../@types/users';
-import { users } from '../../data/users';
 import api from '../../service/api';
+import setLocalStorage from '../../service/localStorage'
+import React, { createContext, ReactNode, useContext, useState } from 'react';
+
+import { UserInfomation } from '../../../@types/users'
 
 interface ISignIn {
   email: string;
@@ -13,6 +14,8 @@ interface IContext {
   handleSignIn: (data: any) => void
 }
 
+
+
 interface IAuthContext {
   children: ReactNode
 }
@@ -23,23 +26,20 @@ export const AuthProvider = ({ children }: IAuthContext) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 
-  const handleSignIn = async (data: ISignIn) => {
-    try {
-      const response = await api.get<Users[]>('/users', users);
-
-      if(!response) {
-        return;
-      }
+  const handleSignIn = async (user: ISignIn) => {
+    try {      
       
-      const user = response.data.find(user => data.email === user.email && data.password === user.password);
+      const { data } = await api.post<UserInfomation>('/auth', user)
 
-      if(!user) {
+      if(!data) {
         return;
       }
+
+      await setLocalStorage().setItem('user', JSON.stringify(data.response))
       
       setIsAuthenticated(true);
     } catch (error) {
-      console.log(error)
+      console.log((error as Error).message)
     }
   }
 

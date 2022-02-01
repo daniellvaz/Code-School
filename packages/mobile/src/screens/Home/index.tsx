@@ -8,7 +8,6 @@ import Button from '../../components/Button';
 import LinearGradient from '../../components/LinearGradient';
 
 import { styles } from './styles';
-import Ilustration from '../../../assets/ilustration.png';
 
 const Home: React.FC = () => {
   return (
@@ -21,7 +20,7 @@ const Home: React.FC = () => {
           esta aqui! 😎
         </Text>
         <Image 
-          source={Ilustration}
+          source={require('../../../assets/ilustration.png')}
           style={styles.image}
         />
         <Button style={styles.button}>

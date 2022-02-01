@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useAuthContext } from "../../context/AuthContext";
-import { Image, ScrollView, Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
 import LinearGradient from "../../components/LinearGradient";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../../routes/authenticated.routes";
@@ -13,19 +13,38 @@ import Preview from "../../components/Preview";
 
 import { styles } from "./styles";
 import Header from "../../components/Header";
+import setLocalStorage from "../../service/localStorage";
+
+import { UserData, UserInfomation } from '../../../@types/users' 
      
 export default function Dashboard() {   
   const { isAuthenticated } = useAuthContext();
-  const { navigate } = useNavigation<homeScreenProp>()
+  const { navigate } = useNavigation<homeScreenProp>();
+  const [userData, setUserData] = useState<UserData>({} as UserData);
+  const { user } = userData
 
   if(!isAuthenticated) {
     navigate("Home")
   }
 
+  async function HandleUserInformation() {
+    const data = await setLocalStorage().getItem("user");
+
+    if(!data) {
+      return;
+    }
+
+    setUserData(JSON.parse(data));
+  }
+
+  useEffect(() => {
+    HandleUserInformation()
+  }, [])
+  
   return (
     <LinearGradient>
       <View style={styles.container}>
-        <Header />
+        <Header username={user && user.name} image={user && user.image}/>
         <View>
           <View style={styles.preview}>
             <Preview />

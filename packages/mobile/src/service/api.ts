@@ -1,32 +1,7 @@
-import { Courses } from "../../@types/courses";
-import { Users } from "../../@types/users";
-import { courses } from "../data/courses";
-import { users } from "../data/users";
+import axios from "axios";
 
-interface Response<R> {
-  data: R;
-  status: number;
-}
-
-const api = {
-  get<T>(url: string, data: T) {
-    switch (url) {
-      case "/users":
-        return new Promise<Response<T>>((resolve) => {
-          setTimeout(() => {
-            resolve({ data, status: 200 });
-          }, 5000);
-        });
-      case "/courses":
-        return new Promise<Response<T>>((resolve) => {
-          setTimeout(() => {
-            resolve({ data, status: 200 });
-          }, 5000);
-        });
-      default:
-        break;
-    }
-  },
-};
+const api = axios.create({
+  baseURL: "http://192.168.104.58:8081",
+});
 
 export default api;

@@ -8,7 +8,6 @@ import Input from '../../components/Input';
 import Animation from '../../components/Animation';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useAuthContext } from '../../context/AuthContext';
-import Ilustration from '../../../assets/Illustration-login.png';
 
 import { theme } from '../../global/theme';
 import { styles } from './styles';
@@ -44,7 +43,7 @@ const SignIn: React.FC = () => {
         <Text style={styles.subTitle}>
           Faça o login para começar!
         </Text>
-        <Image style={styles.image} source={Ilustration} />
+        <Image style={styles.image} source={require("../../../assets/Illustration-login.png")} />
         <View style={styles.form}>
           <View>
             <Input 
