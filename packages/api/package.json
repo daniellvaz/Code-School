@@ -4,16 +4,26 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "server": "tsnd ./server.ts"
+    "server": "ts-node-dev --respawn --transpile-only --exit-child ./server.ts"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seeds/seed.ts"
   },
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "jsonwebtoken": "^8.5.1",
+    "prisma-client": "^0.0.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.13",
-    "ts-node-dev": "^1.1.8"
+    "prisma": "^3.8.1",
+    "ts-node-dev": "^1.1.8",
+    "@prisma/client": "^3.8.1",
+    "@types/bcrypt": "^5.0.0",
+    "@types/jsonwebtoken": "^8.5.8"
   }
 }
