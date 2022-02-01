@@ -10,7 +10,7 @@ export class AuthController {
 
       const response = await this.authServices.execute({ email, password });
 
-      return res.status(200).json({ message: "ok", data: response });
+      return res.status(200).json({ message: "ok", response });
     } catch (error) {
       return res.status(401).json({ message: (error as Error).message });
     }
