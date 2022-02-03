@@ -21,6 +21,9 @@ export const styles = StyleSheet.create({
     left: "50%",
   },
   form: {
+    flex: 1,
+    paddingVertical: 16,
+    marginTop: -64,
     justifyContent: "space-between",
   },
   input: {

@@ -4,6 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "docker": "docker start postgres",
     "server": "ts-node-dev --respawn --transpile-only --exit-child ./server.ts"
   },
   "prisma": {
@@ -17,13 +18,13 @@
     "prisma-client": "^0.0.0"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.12",
-    "@types/express": "^4.17.13",
-    "@types/node": "^17.0.13",
-    "prisma": "^3.8.1",
-    "ts-node-dev": "^1.1.8",
     "@prisma/client": "^3.8.1",
     "@types/bcrypt": "^5.0.0",
-    "@types/jsonwebtoken": "^8.5.8"
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.8",
+    "@types/node": "^17.0.13",
+    "prisma": "^3.8.1",
+    "ts-node-dev": "^1.1.8"
   }
 }

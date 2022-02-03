@@ -7,6 +7,7 @@ import LinearGradient from './src/components/LinearGradient';
 import Routes from './src/routes/routes';
 
 import { AuthProvider } from './src/context/AuthContext';
+import { KeyboardAvoidingView } from 'react-native';
 
 export default function App() {
   return (
@@ -17,7 +18,7 @@ export default function App() {
         translucent
       />
       <AuthProvider>
-        <Routes />
+          <Routes />
       </AuthProvider>
     </LinearGradient>
   );

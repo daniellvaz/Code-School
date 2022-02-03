@@ -31,3 +31,12 @@ export interface UserData {
     image: string;
   };
 }
+
+export interface UserResponse {
+  id: string;
+  name: string;
+  lastName: string;
+  age: number;
+  email: string;
+  image: string;
+}
