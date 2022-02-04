@@ -1,3 +1,5 @@
+import { Addresses } from "../../entities/Addresses";
+
 export interface UserDTO {
   id?: string;
   firstName: string;
@@ -6,6 +8,7 @@ export interface UserDTO {
   permissionsId: string;
   birthday: string;
   phone: string;
+  addresses?: Addresses[];
   email: string;
   password?: string;
   image: string;

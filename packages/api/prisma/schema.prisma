@@ -30,8 +30,9 @@ model Permissions {
   createdAt       DateTime? @default(now()) @map("created_at")
   updatedAt       DateTime? @updatedAt @map("updated_at")
 
-  @@map("permissions")
+
   User User[]
+  @@map("permissions")
 }
 
 model AddressType {
@@ -45,35 +46,47 @@ model AddressType {
 }
 
 model Addresses {
-  id            String      @id
-  address       String
-  zipCode       String      @map("zip_code")
-  number        Int
-  type          AddressType @relation(fields: [addressTypeId], references: [id])
-  addressTypeId String      @map("address_type")
-  user          User        @relation(fields: [userId], references: [id])
-  createdAt     DateTime?   @default(now()) @map("created_at")
-  updatedAt     DateTime?   @updatedAt @map("updated_at")
+  id               String             @id
+  address          String
+  zipCode          String             @unique @map("zip_code")
+  number           Int
+  type             AddressType        @relation(fields: [addressTypeId], references: [id])
+  addressTypeId    String             @map("address_type")
+  user             User[]
+  createdAt        DateTime?          @default(now()) @map("created_at")
+  updatedAt        DateTime?          @updatedAt @map("updated_at")
+  AddressesOnUsers AddressesOnUsers[]
 
-  userId String
   @@map("addresses")
 }
 
 model User {
-  id          String      @id
-  firstName   String      @map("first_name")
-  lastName    String      @map("last_name")
-  active      Boolean
-  permissions Permissions @relation(fields: [permissionsId], references: [id])
-  birthday    String
-  phone       String
-  email       String      @unique
-  password    String
-  image       String
-  createdAt   DateTime?   @default(now()) @map("created_at")
-  updatedAt   DateTime?   @updatedAt @map("updated_at")
+  id               String             @id
+  firstName        String             @map("first_name")
+  lastName         String             @map("last_name")
+  active           Boolean
+  birthday         String
+  phone            String
+  email            String             @unique
+  password         String
+  image            String
+  Addresses        Addresses[]
+  AddressesOnUsers AddressesOnUsers[]
+  createdAt        DateTime?          @default(now()) @map("created_at")
+  updatedAt        DateTime?          @updatedAt @map("updated_at")
 
-  Addresses Addresses[]
+
+  Permissions   Permissions? @relation(fields: [permissionsId], references: [id])
+  permissionsId String?
   @@map("users")
-  permissionsId String
+}
+
+model AddressesOnUsers {
+  user        User      @relation(fields: [userId], references: [id])
+  address     Addresses @relation(fields: [addressesId], references: [id])
+  userId      String
+  addressesId String
+
+  @@id([addressesId, userId])
+  @@map("addresses_on_users")
 }

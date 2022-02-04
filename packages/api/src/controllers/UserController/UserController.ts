@@ -60,4 +60,15 @@ export class UserController {
       return res.status(400).json({ error: (error as Error).message });
     }
   }
+
+  async findWhenIsDeleted(req: Request, res: Response): Promise<Response> {
+    try {
+      console.log("teste");
+      const response = await this.userService.findWhenIsDeleted();
+
+      return res.status(200).json({ message: "teste", users: response });
+    } catch (error) {
+      return res.status(400).json({ message: (error as Error).message });
+    }
+  }
 }
