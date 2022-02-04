@@ -1,42 +1,24 @@
+export interface Addresses {
+  id: string;
+  address: string;
+  zipCode: string;
+  number: number;
+  addressTypeId: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
+}
+
 export interface Users {
   id: number;
-  name: string;
-  email: string;
-  password: string;
-}
-
-export interface UserInfomation {
-  message: string;
-  response: {
-    token: string;
-    user: {
-      id: string;
-      name: string;
-      lastName: string;
-      age: number;
-      email: string;
-      image: string;
-    };
-  };
-}
-
-export interface UserData {
-  token: string;
-  user: {
-    id: string;
-    name: string;
-    lastName: string;
-    age: number;
-    email: string;
-    image: string;
-  };
-}
-
-export interface UserResponse {
-  id: string;
-  name: string;
+  firstName: string;
   lastName: string;
-  age: number;
+  active: boolean;
+  password?: string;
+  birthday: string;
+  permissions: string;
   email: string;
+  phone: string;
+  addresses: Addresses[];
   image: string;
 }

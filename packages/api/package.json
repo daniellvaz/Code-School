@@ -8,7 +8,7 @@
     "server": "ts-node-dev --respawn --transpile-only --exit-child ./server.ts"
   },
   "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seeds/seed.ts"
+    "seed": "ts-node-dev prisma/seeds/seed.ts"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

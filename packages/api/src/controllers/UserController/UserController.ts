@@ -28,13 +28,9 @@ export class UserController {
     try {
       const user = req.body;
 
-      const { firstName, lastName, email } = await this.userService.create(
-        user
-      );
+      const response = await this.userService.create(user);
 
-      return res
-        .status(201)
-        .json({ message: "Ok", user: { firstName, lastName, email } });
+      return res.status(201).json({ message: "Ok", user: response });
     } catch (error) {
       return res.status(400).json({ error: (error as Error).message });
     }

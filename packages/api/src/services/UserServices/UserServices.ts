@@ -6,9 +6,23 @@ import { PrismaClient } from "@prisma/client";
 export class UserService {
   constructor(private client: PrismaClient) {}
 
-  async findMany(): Promise<UserDTO[]> {
+  async findMany(): Promise<Omit<UserDTO[], "password"> | Promise<UserDTO[]>> {
     try {
-      const users = await this.client.user.findMany();
+      const users = await this.client.user.findMany({
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          active: true,
+          password: false,
+          birthday: true,
+          permissionsId: true,
+          email: true,
+          phone: true,
+          Addresses: true,
+          image: true,
+        },
+      });
 
       return users;
     } catch (error) {
@@ -18,10 +32,13 @@ export class UserService {
 
   async findOne(
     userId: string
-  ): Promise<Omit<UserDTO, "password" | "passwordConfirmation"> | []> {
+  ): Promise<Omit<UserDTO, "password"> | Promise<UserDTO> | []> {
     try {
       const user = await this.client.user.findUnique({
         where: { id: userId },
+        include: {
+          permissions: true,
+        },
       });
 
       if (!user) {
@@ -32,8 +49,12 @@ export class UserService {
         id: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
-        age: user.age,
+        active: user.active,
+        permissionsId: user.permissions.description,
+        birthday: user.birthday,
         email: user.email,
+        phone: user.phone,
+        password: user.permissions.fullPrivilegies ? user.password : null,
         image: user.image,
       };
     } catch (error) {
@@ -41,7 +62,7 @@ export class UserService {
     }
   }
 
-  async create(user: UserDTO): Promise<UserDTO> {
+  async create(user: UserDTO): Promise<User> {
     try {
       const userAlreadyExists = await this.client.user.findUnique({
         where: {
@@ -53,20 +74,18 @@ export class UserService {
         throw new Error("Check the information and try again!");
       }
 
-      if (user.password !== user.passwordConfirmation) {
-        throw new Error("Password confirmation dont match!");
-      }
-
       const passHash = bcrypt.hashSync(user.password, 10);
 
       const newUser = new User({
         firstName: user.firstName,
         lastName: user.lastName,
-        age: user.age,
+        active: true,
+        permissions: user.permissionsId,
+        birthday: user.birthday,
+        phone: user.phone,
         email: user.email,
-        image: user.image,
         password: passHash,
-        passwordConfirmation: passHash,
+        image: user.image,
       });
 
       await this.client.user.create({ data: newUser });
@@ -95,8 +114,11 @@ export class UserService {
         id: data.id,
         firstName: data.firstName,
         lastName: data.lastName,
-        age: data.age,
+        active: data.active,
+        permissionsId: data.permissionsId,
+        birthday: data.birthday,
         email: data.email,
+        phone: data.phone,
         image: data.image,
       };
     } catch (error) {

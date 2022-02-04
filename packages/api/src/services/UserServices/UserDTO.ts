@@ -1,10 +1,12 @@
 export interface UserDTO {
-  id: string;
+  id?: string;
   firstName: string;
   lastName: string;
-  age: number;
+  active?: boolean;
+  permissionsId: string;
+  birthday: string;
+  phone: string;
   email: string;
-  password: string;
-  passwordConfirmation: string;
+  password?: string;
   image: string;
 }

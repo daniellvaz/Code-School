@@ -10,15 +10,70 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id                   String @id
-  firstName            String @map("first_name")
-  lastName             String @map("last_name")
-  age                  Int
-  email                String @unique
-  password             String
-  passwordConfirmation String @map("password_confirmation")
-  image                String
+model Actions {
+  id            String       @id
+  description   String
+  Permissions   Permissions? @relation(fields: [permissionsId], references: [id])
+  permissionsId String?
+  createdAt     DateTime?    @default(now()) @map("created_at")
+  updatedAt     DateTime?    @updatedAt @map("updated_at")
 
+  @@map("actions")
+}
+
+model Permissions {
+  id              String    @id
+  description     String
+  active          Boolean
+  fullPrivilegies Boolean   @map("full_privileges")
+  actions         Actions[]
+  createdAt       DateTime? @default(now()) @map("created_at")
+  updatedAt       DateTime? @updatedAt @map("updated_at")
+
+  @@map("permissions")
+  User User[]
+}
+
+model AddressType {
+  id          String    @id
+  description String
+  createdAt   DateTime? @default(now()) @map("created_at")
+  updatedAt   DateTime? @updatedAt @map("updated_at")
+
+  Addresses Addresses[]
+  @@map("address_type")
+}
+
+model Addresses {
+  id            String      @id
+  address       String
+  zipCode       String      @map("zip_code")
+  number        Int
+  type          AddressType @relation(fields: [addressTypeId], references: [id])
+  addressTypeId String      @map("address_type")
+  user          User        @relation(fields: [userId], references: [id])
+  createdAt     DateTime?   @default(now()) @map("created_at")
+  updatedAt     DateTime?   @updatedAt @map("updated_at")
+
+  userId String
+  @@map("addresses")
+}
+
+model User {
+  id          String      @id
+  firstName   String      @map("first_name")
+  lastName    String      @map("last_name")
+  active      Boolean
+  permissions Permissions @relation(fields: [permissionsId], references: [id])
+  birthday    String
+  phone       String
+  email       String      @unique
+  password    String
+  image       String
+  createdAt   DateTime?   @default(now()) @map("created_at")
+  updatedAt   DateTime?   @updatedAt @map("updated_at")
+
+  Addresses Addresses[]
   @@map("users")
+  permissionsId String
 }

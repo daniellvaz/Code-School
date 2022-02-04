@@ -2,17 +2,11 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { AuthDTO } from "./AuthDTO";
 import { PrismaClient } from "@prisma/client";
+import { User } from "../../entities/User";
 
 interface Response {
   token: string;
-  user: {
-    id: string;
-    name: string;
-    lastName: string;
-    age: number;
-    email: string;
-    image: string;
-  };
+  user: User | Omit<User, "password">;
 }
 
 export class AuthServices {
@@ -24,6 +18,10 @@ export class AuthServices {
         where: {
           email: data.email,
         },
+        include: {
+          permissions: true,
+          Addresses: true,
+        },
       });
 
       if (!user) {
@@ -31,8 +29,6 @@ export class AuthServices {
       }
 
       const compare = await bcrypt.compare(data.password, user.password);
-
-      console.log(compare);
 
       if (!compare) {
         throw new Error("Check the information and try again.");
@@ -44,10 +40,19 @@ export class AuthServices {
         token,
         user: {
           id: user.id,
-          name: user.firstName,
+          firstName: user.firstName,
           lastName: user.lastName,
-          age: user.age,
+          active: user.active,
+          permissions: user.permissions.description,
+          birthday: user.birthday,
+          password:
+            user.permissions.fullPrivilegies ||
+            user.permissions.description === "can_see_password"
+              ? user.password
+              : null,
           email: user.email,
+          phone: user.phone,
+          addresses: user.Addresses,
           image: user.image,
         },
       };

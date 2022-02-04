@@ -1,8 +1,7 @@
 import api from '../../service/api';
 import setLocalStorage from '../../service/localStorage'
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-
-import { UserInfomation } from '../../../@types/users'
+import { Users } from '../../../@types/users';
 
 interface ISignIn {
   email: string;
@@ -14,7 +13,11 @@ interface IContext {
   handleSignIn: (data: any) => void
 }
 
-
+interface Response {
+  message: "ok";
+  token: string;
+  user: Users
+}
 
 interface IAuthContext {
   children: ReactNode
@@ -29,13 +32,13 @@ export const AuthProvider = ({ children }: IAuthContext) => {
   const handleSignIn = async (user: ISignIn) => {
     try {      
       
-      const { data } = await api.post<UserInfomation>('/auth', user)
+      const { data } = await api.post<Response>('/auth', user)
 
       if(!data) {
         return;
       }
 
-      await setLocalStorage().setItem('user', JSON.stringify(data.response))
+      await setLocalStorage().setItem('user', JSON.stringify(data.user))
       
       setIsAuthenticated(true);
     } catch (error) {

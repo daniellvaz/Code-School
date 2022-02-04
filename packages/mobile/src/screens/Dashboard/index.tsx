@@ -15,13 +15,13 @@ import { styles } from "./styles";
 import Header from "../../components/Header";
 import setLocalStorage from "../../service/localStorage";
 
-import { UserData, UserInfomation } from '../../../@types/users' 
+import { Users } from '../../../@types/users' 
      
 export default function Dashboard() {   
   const { isAuthenticated } = useAuthContext();
   const { navigate } = useNavigation<homeScreenProp>();
-  const [userData, setUserData] = useState<UserData>({} as UserData);
-  const { user } = userData
+  const [user, setUserData] = useState<Users>({} as Users);
+
 
   if(!isAuthenticated) {
     navigate("Home")
@@ -44,7 +44,7 @@ export default function Dashboard() {
   return (
     <LinearGradient>
       <View style={styles.container}>
-        <Header username={user && user.name} image={user && user.image}/>
+        <Header username={user && user.firstName} image={user && user.image}/>
         <View>
           <View style={styles.preview}>
             <Preview />
