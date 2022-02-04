@@ -14,9 +14,7 @@ export interface Users {
   firstName: string;
   lastName: string;
   active: boolean;
-  password?: string;
   birthday: string;
-  permissions: string;
   email: string;
   phone: string;
   addresses: Addresses[];

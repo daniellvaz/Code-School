@@ -34,6 +34,8 @@ export const AuthProvider = ({ children }: IAuthContext) => {
       
       const { data } = await api.post<Response>('/auth', user)
 
+      console.log(data);
+      
       if(!data) {
         return;
       }

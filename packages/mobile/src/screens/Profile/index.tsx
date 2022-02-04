@@ -1,7 +1,7 @@
 import LinearGradient from '../../components/LinearGradient';
 import React, {useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Image, Text, View, ScrollView, Animated, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import { Text, View, ScrollView, Animated, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
@@ -9,11 +9,11 @@ import Input from '../../components/Input';
 import { styles } from './styles'
 import { theme } from '../../global/theme';
 import setLocalStorage from '../../service/localStorage';
-import { UserResponse } from '../../../@types/users';
+import { Users } from '../../../@types/users';
 
 const Profile = () => {
   const animated = Animated
-  const [user, setUser] = useState({} as UserResponse);
+  const [user, setUser] = useState({} as Users);
   const [opacity] = useState(new Animated.Value(0))
   const { control, handleSubmit } = useForm();
 
@@ -25,7 +25,7 @@ const Profile = () => {
     }
 
     const response = JSON.parse(data)
-    setUser(response.user);
+    setUser(response);
   }
 
   async function saveUserProfile(data: any) {
@@ -55,12 +55,18 @@ const Profile = () => {
     }).start();
   }
 
+  console.log(user);
+  
+  if(!user) {
+    return <Text>Carregando...</Text>
+  }
+
   return (
     <LinearGradient>
       <ScrollView 
         style={[styles.container]}
         onScroll={scroll}
-      >
+      > 
         <View style={[styles.header]}>
           <Animated.Image 
             source={{uri: user.image}}
@@ -79,7 +85,7 @@ const Profile = () => {
             placeholderTextColor={theme.colors.text}
             control={control} 
             style={styles.input}
-            defaultValue={user.name}
+            defaultValue={user.firstName}
           />
           <Input 
             name="lastName" 
@@ -108,7 +114,7 @@ const Profile = () => {
               placeholderTextColor={theme.colors.text}
               control={control} 
               style={styles.inputDate}
-              defaultValue="10/07/1992"
+              defaultValue={user.birthday}
             />
             <Input 
               name="gener" 
@@ -116,7 +122,7 @@ const Profile = () => {
               placeholderTextColor={theme.colors.text}
               control={control} 
               style={styles.inputDate}
-              defaultValue="Masculino"
+              defaultValue={user.phone}
             />
           </View>
           <Input 
@@ -125,26 +131,26 @@ const Profile = () => {
             placeholderTextColor={theme.colors.text}
             control={control} 
             style={styles.input}
-            defaultValue="Rua das Oliveiras, 89"
+            defaultValue={!user ? "Sem endereço" : user.addresses[0].address}
           />
-          <Input 
-            name="password" 
-            placeholder="Senha"
-            placeholderTextColor={theme.colors.text}
-            control={control} 
-            style={styles.input}
-            defaultValue="123456"
-            secureTextEntry
-          />
-          <Input 
-            name="confirmPassword" 
-            placeholder="Confirmação da senha"
-            placeholderTextColor={theme.colors.text}
-            control={control} 
-            style={styles.input}
-            defaultValue="123456"
-            secureTextEntry
-          />
+          <View style={styles.ageContainer}>
+            <Input 
+              name="number" 
+              placeholder="Numero"
+              placeholderTextColor={theme.colors.text}
+              control={control} 
+              style={styles.inputDate}
+              defaultValue={!user ? "" : user.addresses[0].number.toString()}
+            />
+            <Input 
+              name="zipCode" 
+              placeholder="Código postal"
+              placeholderTextColor={theme.colors.text}
+              control={control} 
+              style={styles.inputDate}
+              defaultValue={!user ? "N/A" : user.addresses[0].zipCode}
+            />
+          </View>
           <Button 
             onPress={handleSubmit(saveUserProfile)}
             style={styles.button}
