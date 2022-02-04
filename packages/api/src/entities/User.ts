@@ -6,10 +6,10 @@ export class User {
   public firstName: string;
   public lastName: string;
   public active: boolean;
-  public permissions: string;
+  public permissionsId: string;
   public birthday: string;
   public phone: string;
-  public addresses?: Addresses[];
+  public Addresses?: Addresses[];
   public email: string;
   public password: string;
   public image: string;

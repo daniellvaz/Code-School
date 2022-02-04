@@ -80,13 +80,25 @@ export class UserService {
         firstName: user.firstName,
         lastName: user.lastName,
         active: true,
-        permissions: user.permissionsId,
+        permissionsId: user.permissionsId,
         birthday: user.birthday,
+        Addresses: [
+          {
+            id: "",
+            address: "",
+            addressTypeId: "",
+            number: 0,
+            zipCode: "",
+            userId: "",
+          },
+        ],
         phone: user.phone,
         email: user.email,
         password: passHash,
         image: user.image,
       });
+
+      console.log(newUser);
 
       await this.client.user.create({ data: newUser });
 
