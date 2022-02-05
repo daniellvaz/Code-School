@@ -13,7 +13,9 @@ export class UserService {
         include: {
           AddressesOnUsers: {
             include: {
-              address: { include: { type: { select: { description: true } } } },
+              address: {
+                include: { AddressType: { select: { description: true } } },
+              },
             },
           },
           Permissions: true,
@@ -58,7 +60,9 @@ export class UserService {
         include: {
           AddressesOnUsers: {
             include: {
-              address: { include: { type: { select: { description: true } } } },
+              address: {
+                include: { AddressType: { select: { description: true } } },
+              },
             },
           },
           Permissions: true,
@@ -115,8 +119,10 @@ export class UserService {
         image: user.image,
       });
 
+      console.log(addresses);
+
       if (!addresses) {
-        this.address.create(addresses, newUser.id);
+        await this.address.create(user.addresses, newUser.id);
       }
 
       const addressOnUser = addresses.map((address) => {

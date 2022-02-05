@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,10 +10,10 @@ datasource db {
 model Actions {
   id            String       @id
   description   String
-  Permissions   Permissions? @relation(fields: [permissionsId], references: [id])
-  permissionsId String?
   createdAt     DateTime?    @default(now()) @map("created_at")
   updatedAt     DateTime?    @updatedAt @map("updated_at")
+  Permissions   Permissions? @relation(fields: [permissionsId], references: [id])
+  permissionsId String?
 
   @@map("actions")
 }
@@ -25,23 +22,22 @@ model Permissions {
   id              String    @id
   description     String
   active          Boolean
-  fullPrivilegies Boolean   @map("full_privileges")
-  actions         Actions[]
   createdAt       DateTime? @default(now()) @map("created_at")
   updatedAt       DateTime? @updatedAt @map("updated_at")
+  fullPrivilegies Boolean   @map("full_privileges")
+  actions         Actions[]
+  User            User[]
 
-
-  User User[]
   @@map("permissions")
 }
 
 model AddressType {
-  id          String    @id
+  id          String      @id
   description String
-  createdAt   DateTime? @default(now()) @map("created_at")
-  updatedAt   DateTime? @updatedAt @map("updated_at")
+  createdAt   DateTime?   @default(now()) @map("created_at")
+  updatedAt   DateTime?   @updatedAt @map("updated_at")
+  Addresses   Addresses[]
 
-  Addresses Addresses[]
   @@map("address_type")
 }
 
@@ -50,12 +46,12 @@ model Addresses {
   address          String
   zipCode          String             @unique @map("zip_code")
   number           Int
-  type             AddressType        @relation(fields: [addressTypeId], references: [id])
-  addressTypeId    String             @map("address_type")
-  user             User[]
   createdAt        DateTime?          @default(now()) @map("created_at")
   updatedAt        DateTime?          @updatedAt @map("updated_at")
+  AddressType      AddressType        @relation(fields: [type], references: [id])
+  type             String
   AddressesOnUsers AddressesOnUsers[]
+  user             User[]
 
   @@map("addresses")
 }
@@ -70,21 +66,20 @@ model User {
   email            String             @unique
   password         String
   image            String
-  Addresses        Addresses[]
-  AddressesOnUsers AddressesOnUsers[]
   createdAt        DateTime?          @default(now()) @map("created_at")
   updatedAt        DateTime?          @updatedAt @map("updated_at")
+  Permissions      Permissions?       @relation(fields: [permissionsId], references: [id])
+  permissionsId    String?
+  AddressesOnUsers AddressesOnUsers[]
+  Addresses        Addresses[]
 
-
-  Permissions   Permissions? @relation(fields: [permissionsId], references: [id])
-  permissionsId String?
   @@map("users")
 }
 
 model AddressesOnUsers {
   user        User      @relation(fields: [userId], references: [id])
-  address     Addresses @relation(fields: [addressesId], references: [id])
   userId      String
+  address     Addresses @relation(fields: [addressesId], references: [id])
   addressesId String
 
   @@id([addressesId, userId])

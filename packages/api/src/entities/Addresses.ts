@@ -5,7 +5,7 @@ export class Addresses {
   public address: string;
   public zipCode: string;
   public number: number;
-  public addressTypeId: string;
+  public type: string;
 
   constructor(props: Omit<Addresses, "id">, id?: string) {
     Object.assign(this, props);

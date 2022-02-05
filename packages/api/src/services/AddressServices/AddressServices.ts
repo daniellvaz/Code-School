@@ -7,7 +7,7 @@ export class AddressService {
 
   async findManyByZipCode(zipCode: AddressDTO[]): Promise<AddressDTO[]> {
     try {
-      const addresses = this.client.addresses.findMany({
+      const addresses = await this.client.addresses.findMany({
         where: {
           zipCode: {
             in: zipCode.map((item) => {
@@ -17,6 +17,10 @@ export class AddressService {
         },
       });
 
+      if (addresses.length <= 0) {
+        return null;
+      }
+
       return addresses;
     } catch (error) {
       console.log(error);
@@ -25,22 +29,25 @@ export class AddressService {
 
   async create(addresses: AddressDTO[], userId: string): Promise<AddressDTO[]> {
     try {
-      const newAddresses = await Promise.all(
-        addresses.map(async (address) => {
-          const newAddress = new Addresses(address);
+      let newAddresses: Addresses[] = [];
 
-          await this.client.addressesOnUsers.create({
-            data: {
-              userId,
-              addressesId: newAddress.id,
-            },
-          });
-          return newAddress;
-        })
-      );
+      for await (const address of addresses) {
+        const newAddress = new Addresses(address);
 
-      await this.client.addresses.createMany({ data: newAddresses });
+        await this.client.addresses.create({ data: newAddress });
+        await this.client.addressesOnUsers.create({
+          data: {
+            addressesId: newAddress.id,
+            userId,
+          },
+        });
+
+        newAddresses.push(newAddress);
+      }
+
       return newAddresses;
-    } catch (error) {}
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
   }
 }
