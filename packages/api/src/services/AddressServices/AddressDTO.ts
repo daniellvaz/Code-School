@@ -3,5 +3,5 @@ export interface AddressDTO {
   address: string;
   zipCode: string;
   number: number;
-  type: string;
+  addressTypeId: string;
 }

@@ -7,6 +7,10 @@ import { AddressService } from "../AddressServices/AddressServices";
 export class UserService {
   constructor(private client: PrismaClient, public address: AddressService) {}
 
+  /**
+   * Method to return many Users
+   * @return {Array}
+   */
   async findMany(): Promise<Omit<UserDTO[], "password"> | Promise<UserDTO[]>> {
     try {
       const response = await this.client.user.findMany({
@@ -49,6 +53,11 @@ export class UserService {
     }
   }
 
+  /**
+   * Method to return on User
+   * @param  userId {string}
+   * @return {Array}
+   */
   async findOne(
     userId: string
   ): Promise<Omit<UserDTO, "password"> | Promise<UserDTO> | []> {
@@ -93,6 +102,11 @@ export class UserService {
     }
   }
 
+  /**
+   * Method to create an User
+   * @param  user {UserDTO}
+   * @return {Promise<UserDTO>}
+   */
   async create(user: UserDTO): Promise<User> {
     try {
       const userAlreadyExists = await this.client.user.findUnique({
@@ -119,22 +133,6 @@ export class UserService {
         image: user.image,
       });
 
-      console.log(addresses);
-
-      if (!addresses) {
-        await this.address.create(user.addresses, newUser.id);
-      }
-
-      const addressOnUser = addresses.map((address) => {
-        return {
-          userId: newUser.id,
-          addressesId: address.id,
-        };
-      });
-
-      await this.client.addressesOnUsers.createMany({
-        data: addressOnUser,
-      });
       await this.client.user.create({
         data: {
           id: newUser.id,
@@ -150,21 +148,57 @@ export class UserService {
         },
       });
 
+      if (!addresses) {
+        await this.address.create(user.addresses, newUser.id);
+
+        return newUser;
+      }
+
+      const addressOnUser = addresses.map((address) => {
+        return {
+          user_id: newUser.id,
+          address_id: address.id,
+        };
+      });
+
+      await this.client.addressesOnUsers.createMany({
+        data: addressOnUser,
+      });
+
       return newUser;
     } catch (error) {
       throw new Error((error as Error).message);
     }
   }
 
+  /**
+   * Method to update an user
+   * @param  userId  {string}
+   * @param  data    {UserDTO}
+   * @return {UserDTO}
+   */
   async update(
     userId: string,
     data: UserDTO
-  ): Promise<Omit<UserDTO, "password" | "passwordConfirmation">> {
+  ): Promise<Omit<UserDTO, "password">> {
     try {
       const user = await this.client.user.update({
         where: { id: userId },
-        data,
+        data: {
+          id: data.id,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          birthday: data.birthday,
+          active: data.active,
+          email: data.email,
+          phone: data.phone,
+          image: data.image,
+          password: data.password,
+        },
+        include: { Addresses: true },
       });
+
+      const addresses = await this.address.update(data.addresses, user.id);
 
       if (!user) {
         throw new Error(`User ${userId} does not exist!`);
@@ -179,6 +213,11 @@ export class UserService {
         birthday: data.birthday,
         email: data.email,
         phone: data.phone,
+        addresses: addresses.map(
+          ({ id, address, number, zipCode, addressTypeId }) => {
+            return { id, address, number, zipCode, addressTypeId };
+          }
+        ),
         image: data.image,
       };
     } catch (error) {
@@ -186,6 +225,11 @@ export class UserService {
     }
   }
 
+  /**
+   * Method to delete an user
+   * @param  id {string}
+   * @return {boolean}
+   */
   async delete(id: string): Promise<boolean> {
     try {
       const response = await this.client.user.update({
@@ -207,6 +251,10 @@ export class UserService {
     }
   }
 
+  /**
+   * Method to retun an deleted user
+   * @return {UserDTO[]}
+   */
   async findWhenIsDeleted(): Promise<UserDTO[]> {
     try {
       console.log("teste");

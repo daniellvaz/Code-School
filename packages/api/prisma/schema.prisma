@@ -36,20 +36,21 @@ model AddressType {
   description String
   createdAt   DateTime?   @default(now()) @map("created_at")
   updatedAt   DateTime?   @updatedAt @map("updated_at")
-  Addresses   Addresses[]
+  address     Addresses[]
 
   @@map("address_type")
 }
 
 model Addresses {
-  id               String             @id
-  address          String
-  zipCode          String             @unique @map("zip_code")
-  number           Int
-  createdAt        DateTime?          @default(now()) @map("created_at")
-  updatedAt        DateTime?          @updatedAt @map("updated_at")
-  AddressType      AddressType        @relation(fields: [type], references: [id])
-  type             String
+  id            String       @id
+  address       String
+  zipCode       String       @unique @map("zip_code")
+  number        Int
+  AddressType   AddressType? @relation(fields: [addressTypeId], references: [id])
+  addressTypeId String?      @map("type")
+  createdAt     DateTime?    @default(now()) @map("created_at")
+  updatedAt     DateTime?    @updatedAt @map("updated_at")
+
   AddressesOnUsers AddressesOnUsers[]
   user             User[]
 
@@ -69,7 +70,7 @@ model User {
   createdAt        DateTime?          @default(now()) @map("created_at")
   updatedAt        DateTime?          @updatedAt @map("updated_at")
   Permissions      Permissions?       @relation(fields: [permissionsId], references: [id])
-  permissionsId    String?
+  permissionsId    String?            @map("permission_id")
   AddressesOnUsers AddressesOnUsers[]
   Addresses        Addresses[]
 
@@ -77,11 +78,11 @@ model User {
 }
 
 model AddressesOnUsers {
-  user        User      @relation(fields: [userId], references: [id])
-  userId      String
-  address     Addresses @relation(fields: [addressesId], references: [id])
-  addressesId String
+  user       User      @relation(fields: [user_id], references: [id])
+  user_id    String
+  address    Addresses @relation(fields: [address_id], references: [id])
+  address_id String
 
-  @@id([addressesId, userId])
+  @@id([user_id, address_id])
   @@map("addresses_on_users")
 }

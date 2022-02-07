@@ -19,7 +19,7 @@ export class AuthServices {
           email: data.email,
         },
         include: {
-          permissions: true,
+          Permissions: true,
           Addresses: true,
         },
       });
@@ -43,16 +43,16 @@ export class AuthServices {
           firstName: user.firstName,
           lastName: user.lastName,
           active: user.active,
-          permissions: user.permissions.description,
+          permissionsId: user.Permissions.description,
           birthday: user.birthday,
           password:
-            user.permissions.fullPrivilegies ||
-            user.permissions.description === "can_see_password"
+            user.Permissions.fullPrivilegies ||
+            user.Permissions.description === "can_see_password"
               ? user.password
               : null,
           email: user.email,
           phone: user.phone,
-          addresses: user.Addresses,
+          Addresses: user.Addresses,
           image: user.image,
         },
       };

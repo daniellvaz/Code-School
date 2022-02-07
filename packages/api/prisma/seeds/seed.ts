@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import { Addresses, AddressType, PrismaClient, User } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 const client = new PrismaClient();
 
@@ -26,7 +26,7 @@ async function main() {
       permissionsId: Permissions.id,
       birthday: "10/07/1992",
       phone: "3333-3333",
-      email: "contato@codeschool.com.br",
+      email: "adm.contato@codeschool.com.br",
       password: pass,
       image: `https://avataaars.io/?avatarStyle=Circle&topType=ShortHairTheCaesar&accessoriesType=Prescription01&hairColor=BlondeGolden&facialHairType=MoustacheFancy&facialHairColor=Platinum&clotheType=ShirtCrewNeck&clotheColor=Red&eyeType=Cry&eyebrowType=UnibrowNatural&mouthType=Twinkle&skinColor=Light'`,
     };
@@ -46,12 +46,12 @@ async function main() {
       address: "Rua das Laranjeiras",
       zipCode: "88888-888",
       number: 88,
-      type: Business.id,
+      addressTypeId: Permissions.id,
     };
 
     const AddressOnUser = {
-      userId: Administrator.id,
-      addressesId: Addresses.id,
+      user_id: Administrator.id,
+      address_id: Addresses.id,
     };
 
     const Actions = [

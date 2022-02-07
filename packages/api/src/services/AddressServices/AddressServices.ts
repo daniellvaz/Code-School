@@ -1,3 +1,4 @@
+import { v4 as uuid } from "uuid";
 import { PrismaClient } from "@prisma/client";
 import { Addresses } from "../../entities/Addresses";
 import { AddressDTO } from "./AddressDTO";
@@ -37,12 +38,45 @@ export class AddressService {
         await this.client.addresses.create({ data: newAddress });
         await this.client.addressesOnUsers.create({
           data: {
-            addressesId: newAddress.id,
-            userId,
+            user_id: userId,
+            address_id: newAddress.id,
           },
         });
 
         newAddresses.push(newAddress);
+      }
+
+      return newAddresses;
+    } catch (error) {
+      throw new Error((error as Error).message);
+    }
+  }
+
+  async update(addresses: AddressDTO[], userId: string) {
+    try {
+      let newAddresses: AddressDTO[] = [];
+
+      for await (const address of addresses) {
+        const result = await this.client.addresses.upsert({
+          where: { id: address.id, zipCode: address.zipCode },
+          update: address,
+          create: {
+            id: uuid(),
+            address: address.address,
+            number: address.number,
+            zipCode: address.zipCode,
+            addressTypeId: address.addressTypeId,
+          },
+        });
+
+        await this.client.addressesOnUsers.create({
+          data: {
+            address_id: result.id,
+            user_id: userId,
+          },
+        });
+
+        newAddresses.push(result);
       }
 
       return newAddresses;
