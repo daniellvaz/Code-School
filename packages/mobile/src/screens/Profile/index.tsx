@@ -11,13 +11,16 @@ import { theme } from '../../global/theme';
 import setLocalStorage from '../../service/localStorage';
 import { Addresses, Users } from '../../../@types/users';
 import Animation from '../../components/Animation';
+import api from '../../service/api';
 
 const Profile = () => {
   const animated = Animated
+  const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(false)
   const [user, setUser] = useState({} as Users);
-  const [address, setAddress] = useState({} as Addresses)
-  const [opacity] = useState(new Animated.Value(1))
   const { control, handleSubmit } = useForm();
+  const [opacity] = useState(new Animated.Value(1))
+  const [address, setAddress] = useState({} as Addresses)
 
   async function handleUserData() {
     const data = await setLocalStorage().getItem('user');
@@ -28,12 +31,20 @@ const Profile = () => {
 
     const { response } = JSON.parse(data)
     setUser(response.user);
-    setAddress(response.user.Addresses[0])
+    setAddress(response.user.Addresses[0]);
+    setToken(response.token)
   }
 
   async function saveUserProfile(data: any) {
     try {
-      console.log(data);
+      setLoading(true)
+      await api.put(`/users/update/${user.id}`, data, {
+        headers: {
+          Authorization: token
+        }
+      })
+
+      setLoading(false)
     } catch (error) {
       console.log(error)
     }
@@ -71,14 +82,14 @@ const Profile = () => {
       > 
         <View style={[styles.header]}>
           <Animated.Image 
-            source={{uri: "https://github.com/daniellvaz.png"}}
+            source={{uri: user.image}}
             style={[styles.avatar, { opacity }]}
             fadeDuration={10}
           />
         </View>
         <View style={styles.content}>
           <Text style={styles.link}>Editar imagem</Text>
-          <Text style={styles.name}>Daniel Murilo Vaz</Text>
+          <Text style={styles.name}>{ user.firstName + " " + user.lastName }</Text>
         </View>
         <View style={styles.form}>
           <Input 
@@ -119,8 +130,8 @@ const Profile = () => {
               defaultValue={user.birthday}
             />
             <Input 
-              name="gener" 
-              placeholder="Genero"
+              name="phone" 
+              placeholder="Telefone/Celular"
               placeholderTextColor={theme.colors.text}
               control={control} 
               style={styles.inputDate}
@@ -153,11 +164,19 @@ const Profile = () => {
               defaultValue={address.zipCode || "Carregando..."}
             />
           </View>
+          <Input 
+            name="image" 
+            placeholder="Imagem"
+            placeholderTextColor={theme.colors.text}
+            control={control} 
+            style={styles.input}
+            defaultValue={user.image || "Carregando..."}
+          />
           <Button 
             onPress={handleSubmit(saveUserProfile)}
             style={styles.button}
           >
-            <Text style={styles.text}>Salvar</Text>
+            { loading ? <Text style={styles.text}>Salvando</Text> : <Text style={styles.text}>Salvar</Text> }
           </Button>
         </View>
       </ScrollView>
