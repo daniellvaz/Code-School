@@ -9,12 +9,14 @@ import Input from '../../components/Input';
 import { styles } from './styles'
 import { theme } from '../../global/theme';
 import setLocalStorage from '../../service/localStorage';
-import { Users } from '../../../@types/users';
+import { Addresses, Users } from '../../../@types/users';
+import Animation from '../../components/Animation';
 
 const Profile = () => {
   const animated = Animated
   const [user, setUser] = useState({} as Users);
-  const [opacity] = useState(new Animated.Value(0))
+  const [address, setAddress] = useState({} as Addresses)
+  const [opacity] = useState(new Animated.Value(1))
   const { control, handleSubmit } = useForm();
 
   async function handleUserData() {
@@ -26,6 +28,7 @@ const Profile = () => {
 
     const { response } = JSON.parse(data)
     setUser(response.user);
+    setAddress(response.user.Addresses[0])
   }
 
   async function saveUserProfile(data: any) {
@@ -55,11 +58,10 @@ const Profile = () => {
     }).start();
   }
 
-  console.log(user);
-  
   if(!user) {
-    return <Text>Carregando...</Text>
+    return <Animation />
   }
+  
 
   return (
     <LinearGradient>
@@ -69,7 +71,7 @@ const Profile = () => {
       > 
         <View style={[styles.header]}>
           <Animated.Image 
-            source={{uri: user.image}}
+            source={{uri: "https://github.com/daniellvaz.png"}}
             style={[styles.avatar, { opacity }]}
             fadeDuration={10}
           />
@@ -131,7 +133,7 @@ const Profile = () => {
             placeholderTextColor={theme.colors.text}
             control={control} 
             style={styles.input}
-            defaultValue={!user ? "Sem endereço" : user.Addresses[0].address}
+            defaultValue={address.address || "Carregando..."}
           />
           <View style={styles.ageContainer}>
             <Input 
@@ -140,7 +142,7 @@ const Profile = () => {
               placeholderTextColor={theme.colors.text}
               control={control} 
               style={styles.inputDate}
-              defaultValue={!user ? "" : user.Addresses[0].number.toString()}
+              defaultValue={!address.number ? "Carregando..." : address.number.toString()}
             />
             <Input 
               name="zipCode" 
@@ -148,7 +150,7 @@ const Profile = () => {
               placeholderTextColor={theme.colors.text}
               control={control} 
               style={styles.inputDate}
-              defaultValue={!user ? "N/A" : user.Addresses[0].zipCode}
+              defaultValue={address.zipCode || "Carregando..."}
             />
           </View>
           <Button 
