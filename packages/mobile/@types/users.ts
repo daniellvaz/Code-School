@@ -17,6 +17,6 @@ export interface Users {
   birthday: string;
   email: string;
   phone: string;
-  addresses: Addresses[];
+  Addresses: Addresses[];
   image: string;
 }

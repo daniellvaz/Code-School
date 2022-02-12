@@ -19,8 +19,8 @@ export class AuthServices {
           email: data.email,
         },
         include: {
+          AddressesOnUsers: { include: { address: true } },
           Permissions: true,
-          Addresses: true,
         },
       });
 
@@ -45,14 +45,9 @@ export class AuthServices {
           active: user.active,
           permissionsId: user.Permissions.description,
           birthday: user.birthday,
-          password:
-            user.Permissions.fullPrivilegies ||
-            user.Permissions.description === "can_see_password"
-              ? user.password
-              : null,
           email: user.email,
           phone: user.phone,
-          Addresses: user.Addresses,
+          Addresses: user.AddressesOnUsers.map((item) => item.address),
           image: user.image,
         },
       };

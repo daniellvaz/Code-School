@@ -26,7 +26,7 @@
     "@types/uuid": "^8.3.4",
     "axios": "^0.25.0",
     "expo": "~44.0.0",
-    "expo-linear-gradient": "~11.0.0",
+    "expo-linear-gradient": "~11.0.3",
     "expo-status-bar": "~1.2.0",
     "expo-yarn-workspaces": "^1.7.0",
     "lottie-react-native": "5.0.1",

@@ -24,8 +24,8 @@ const Profile = () => {
       return;
     }
 
-    const response = JSON.parse(data)
-    setUser(response);
+    const { response } = JSON.parse(data)
+    setUser(response.user);
   }
 
   async function saveUserProfile(data: any) {
@@ -131,7 +131,7 @@ const Profile = () => {
             placeholderTextColor={theme.colors.text}
             control={control} 
             style={styles.input}
-            defaultValue={!user ? "Sem endereço" : user.addresses[0].address}
+            defaultValue={!user ? "Sem endereço" : user.Addresses[0].address}
           />
           <View style={styles.ageContainer}>
             <Input 
@@ -140,7 +140,7 @@ const Profile = () => {
               placeholderTextColor={theme.colors.text}
               control={control} 
               style={styles.inputDate}
-              defaultValue={!user ? "" : user.addresses[0].number.toString()}
+              defaultValue={!user ? "" : user.Addresses[0].number.toString()}
             />
             <Input 
               name="zipCode" 
@@ -148,7 +148,7 @@ const Profile = () => {
               placeholderTextColor={theme.colors.text}
               control={control} 
               style={styles.inputDate}
-              defaultValue={!user ? "N/A" : user.addresses[0].zipCode}
+              defaultValue={!user ? "N/A" : user.Addresses[0].zipCode}
             />
           </View>
           <Button 
