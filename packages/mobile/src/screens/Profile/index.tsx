@@ -1,78 +1,32 @@
 import LinearGradient from '../../components/LinearGradient';
 import React, {useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Text, View, ScrollView, Animated, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
+import { Text, View, ScrollView, Animated } from 'react-native';
 
 import Button from '../../components/Button';
 import Input from '../../components/Input';
 
 import { styles } from './styles'
 import { theme } from '../../global/theme';
-import setLocalStorage from '../../service/localStorage';
-import { Addresses, Users } from '../../../@types/users';
-import Animation from '../../components/Animation';
-import api from '../../service/api';
+import useProfile from './hooks/useProfile';
+
 
 const Profile = () => {
   const animated = Animated
-  const [token, setToken] = useState("");
-  const [loading, setLoading] = useState(false)
-  const [user, setUser] = useState({} as Users);
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit, formState } = useForm();
   const [opacity] = useState(new Animated.Value(1))
-  const [address, setAddress] = useState({} as Addresses)
-
-  async function handleUserData() {
-    const data = await setLocalStorage().getItem('user');
-
-    if(!data) {
-      return;
-    }
-
-    const { response } = JSON.parse(data)
-    setUser(response.user);
-    setAddress(response.user.Addresses[0]);
-    setToken(response.token)
-  }
-
-  async function saveUserProfile(data: any) {
-    try {
-      setLoading(true)
-      await api.put(`/users/update/${user.id}`, data, {
-        headers: {
-          Authorization: token
-        }
-      })
-
-      setLoading(false)
-    } catch (error) {
-      console.log(error)
-    }
-  }
+  const { 
+    handleUserData,
+    saveUserProfile,
+    scroll,
+    user,
+    address 
+  } = useProfile(animated, opacity)
+  
 
   useEffect(() => {
     handleUserData()
   }, [])
-
-  function scroll(e: NativeSyntheticEvent<NativeScrollEvent>) {
-    if(e.nativeEvent.contentOffset.y < 25) {
-      animated.timing(opacity, {
-        toValue: 1,
-        useNativeDriver: true
-      }).start();
-      return;
-    }
-
-    animated.timing(opacity, {
-      toValue: 0,
-      useNativeDriver: true
-    }).start();
-  }
-
-  if(!user) {
-    return <Animation />
-  }
-  
 
   return (
     <LinearGradient>
@@ -176,7 +130,7 @@ const Profile = () => {
             onPress={handleSubmit(saveUserProfile)}
             style={styles.button}
           >
-            { loading ? <Text style={styles.text}>Salvando</Text> : <Text style={styles.text}>Salvar</Text> }
+            { formState.isSubmitted ? <Text style={styles.text}>Salvando</Text> : <Text style={styles.text}>Salvar</Text> }
           </Button>
         </View>
       </ScrollView>
