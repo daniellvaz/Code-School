@@ -43,7 +43,7 @@ export class UserController {
 
       const response = await this.userService.update(id, user);
 
-      return res.status(201).json({ message: "ok", user: response });
+      return res.status(201).json({ message: response.message });
     } catch (error) {
       return res.status(400).json({ error: (error as Error).message });
     }

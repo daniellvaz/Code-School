@@ -130,7 +130,9 @@ export class UserService {
         phone: user.phone,
         email: user.email,
         password: passHash,
-        image: user.image,
+        image: user.image
+          ? user.image
+          : `https://ui-avatars.com/api/?name=${user.firstName}}&background=B83280&color=fff&size=400`,
       });
 
       await this.client.user.create({
@@ -177,49 +179,45 @@ export class UserService {
    * @param  data    {UserDTO}
    * @return {UserDTO}
    */
-  async update(
-    userId: string,
-    data: UserDTO
-  ): Promise<Omit<UserDTO, "password">> {
+  async update(userId: string, data: UserDTO): Promise<{ message: string }> {
     try {
+      const currentUserData = await this.client.user.findUnique({
+        where: { id: userId },
+        include: {
+          Addresses: true,
+        },
+      });
+
+      const passHash = data.password
+        ? bcrypt.hashSync(data.password, 10)
+        : null;
+
       const user = await this.client.user.update({
         where: { id: userId },
         data: {
-          id: data.id,
-          firstName: data.firstName,
-          lastName: data.lastName,
-          birthday: data.birthday,
-          active: data.active,
-          email: data.email,
-          phone: data.phone,
-          image: data.image,
-          password: data.password,
+          firstName: data.firstName
+            ? data.firstName
+            : currentUserData.firstName,
+          lastName: data.lastName ? data.lastName : currentUserData.lastName,
+          birthday: data.birthday ? data.birthday : currentUserData.birthday,
+          active: data.active ? data.active : currentUserData.active,
+          email: data.email ? data.email : currentUserData.email,
+          phone: data.phone ? data.phone : currentUserData.phone,
+          image: data.image ? data.image : currentUserData.image,
+          password: data.password ? passHash : currentUserData.password,
         },
         include: { Addresses: true },
       });
 
-      const addresses = await this.address.update(data.addresses, user.id);
+      const addresses = data.addresses
+        ? await this.address.update(data.addresses, user.id)
+        : null;
 
       if (!user) {
         throw new Error(`User ${userId} does not exist!`);
       }
 
-      return {
-        id: data.id,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        active: data.active,
-        permissionsId: data.permissionsId,
-        birthday: data.birthday,
-        email: data.email,
-        phone: data.phone,
-        addresses: addresses.map(
-          ({ id, address, number, zipCode, addressTypeId }) => {
-            return { id, address, number, zipCode, addressTypeId };
-          }
-        ),
-        image: data.image,
-      };
+      return { message: "ok" };
     } catch (error) {
       throw new Error((error as Error).message);
     }

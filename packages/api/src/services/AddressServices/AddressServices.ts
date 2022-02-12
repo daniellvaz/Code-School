@@ -52,7 +52,41 @@ export class AddressService {
     }
   }
 
-  async update(addresses: AddressDTO[], userId: string) {
+  async update(addresses: AddressDTO[], userId: string): Promise<AddressDTO[]> {
+    if (addresses.length <= 0) {
+      console.log("aqui");
+
+      const currentAddress = await this.client.addressesOnUsers.findMany({
+        include: {
+          address: {
+            include: {
+              user: {
+                where: {
+                  id: userId,
+                },
+              },
+              AddressType: true,
+            },
+          },
+        },
+        where: {
+          user_id: userId,
+        },
+      });
+
+      const address = currentAddress.map(({ address: addresses }) => {
+        return {
+          id: addresses.id,
+          address: addresses.address,
+          number: addresses.number,
+          zipCode: addresses.zipCode,
+          addressTypeId: addresses.AddressType.description,
+        };
+      });
+
+      return address;
+    }
+
     try {
       let newAddresses: AddressDTO[] = [];
 
