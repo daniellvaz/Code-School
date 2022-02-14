@@ -9,7 +9,7 @@ export default function isAuthenticated(
   try {
     const token = req.header("Authorization");
 
-    const decode = jwt.verify(token, "code");
+    const decode = jwt.verify(token, process.env.SECRET);
 
     if (!decode) {
       throw new Error("Invalid token");

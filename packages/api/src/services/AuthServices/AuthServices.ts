@@ -24,7 +24,7 @@ export class AuthServices {
         },
       });
 
-      if (!user) {
+      if (!user || !user.active) {
         throw new Error("Check the information and try again.");
       }
 
@@ -34,22 +34,16 @@ export class AuthServices {
         throw new Error("Check the information and try again.");
       }
 
-      const token = jwt.sign("code", "code");
+      const token = jwt.sign(
+        {
+          exp: Math.floor(Date.now() / 1000) + 60 * 60,
+        },
+        process.env.SECRET
+      );
 
       return {
         token,
-        user: {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          active: user.active,
-          permissionsId: user.Permissions.description,
-          birthday: user.birthday,
-          email: user.email,
-          phone: user.phone,
-          Addresses: user.AddressesOnUsers.map((item) => item.address),
-          image: user.image,
-        },
+        user,
       };
     } catch (error) {
       throw new Error((error as Error).message);

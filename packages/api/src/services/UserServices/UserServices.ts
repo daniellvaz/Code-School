@@ -132,7 +132,7 @@ export class UserService {
         password: passHash,
         image: user.image
           ? user.image
-          : `https://ui-avatars.com/api/?name=${user.firstName}}&background=B83280&color=fff&size=400`,
+          : `https://ui-avatars.com/api/?name=${user.firstName}&background=B83280&color=fff&size=400`,
       });
 
       await this.client.user.create({
@@ -209,7 +209,7 @@ export class UserService {
         include: { Addresses: true },
       });
 
-      const addresses = data.addresses
+      data.addresses
         ? await this.address.update(data.addresses, user.id)
         : null;
 
