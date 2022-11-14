@@ -4,10 +4,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "server": "cd ./packages/api && yarn docker && yarn server",
-    "mobile": "cd ./packages/mobile && expo start",
-    "start": "yarn server & yarn mobile",
-    "postinstall": "cd ./packages/mobile && expo-yarn-workspaces postinstall"
+    "dev:server": "yarn workspace @code/api server",
+    "dev:mobile": "yarn workspaces @code/mobile start"
   },
   "workspaces": [
     "packages/*"

@@ -1,9 +1,11 @@
+import "dotenv/config"
+
 import express from "express";
 import cors from "cors";
 
 // routes import
-import userRoutes from "./src/routes.ts/user.routes";
-import authRoutes from "./src/routes.ts/auth.routes";
+import userRoutes from "./src/routes/user.routes";
+import authRoutes from "./src/routes/auth.routes";
 
 const app = express();
 
@@ -14,4 +16,7 @@ app.use(express.json());
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 
-app.listen(8081, () => console.log("server is running"));
+app.listen(
+  process.env.PORT, () => 
+  console.log(`server is running ${process.env.PORT}`)
+);
