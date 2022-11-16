@@ -25,11 +25,11 @@ const validationSchema = yup.object().shape({
 
 const SignIn: React.FC = () => {
   const { handleSignIn } = useAuthContext()
-  const { control, handleSubmit, formState: {errors, isSubmitting} } = useForm<IUserData>({
+  const { control, handleSubmit, formState: { errors, isSubmitting } } = useForm<IUserData>({
     resolver: yupResolver(validationSchema)
   });
 
-  if(isSubmitting) {
+  if(isSubmitting && !errors) {
     return <Animation />
   }
 

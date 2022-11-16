@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev:server": "yarn workspace @code/api server",
-    "dev:mobile": "yarn workspaces @code/mobile start"
+    "dev:mobile": "yarn workspace @code/mobile start"
   },
   "workspaces": [
     "packages/*"

@@ -1,13 +1,19 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 
-export default function isAuthenticated(
+export default function ensureAuthenticate(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
   try {
-    const token = req.header("Authorization");
+    const authorization = req.header("Authorization");
+
+    if(!authorization) {
+      throw new Error("Unautorized");
+    }
+
+    const [_, token] = authorization.split(" ")
 
     const decode = jwt.verify(token, process.env.SECRET);
 

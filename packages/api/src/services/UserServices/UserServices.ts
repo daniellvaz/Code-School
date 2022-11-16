@@ -34,7 +34,6 @@ export class UserService {
           id: item.id,
           firstName: item.firstName,
           lastName: item.lastName,
-          password: item.password,
           active: true,
           permissionsId: item.permissionsId,
           birthday: item.birthday,
@@ -116,8 +115,10 @@ export class UserService {
       });
       const addresses = await this.address.findManyByZipCode(user.addresses);
 
-      if (!user || userAlreadyExists) {
+      if (!user) {
         throw new Error("Check the information and try again!");
+      } else if(userAlreadyExists) {
+        throw new Error(`User ${user.firstName} already exists!`);
       }
 
       const passHash = bcrypt.hashSync(user.password, 10);
